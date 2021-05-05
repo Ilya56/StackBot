@@ -1,4 +1,5 @@
 const Context = require('./context');
+const { Markup } = require('telegraf');
 
 /**
  * This is the base class of the bot. This class contains and controls states
@@ -114,6 +115,10 @@ class Bot {
         await context.showText('Some error: ' + e.message);
       }
     });
+  }
+
+  sendDirectMessage(userId, message) {
+    return this._bot.telegram.sendMessage(userId, message);
   }
 
 }

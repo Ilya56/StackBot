@@ -40,13 +40,13 @@ class Context {
   showButtons(text, buttons) {
     return this._ctx.replyWithMarkdown(text,
       Markup.keyboard(buttons)
-        .oneTime()
+        // .oneTime()
         .resize());
   }
 
   /**
    * @typedef {Object} UserData Telegraf user data simple type
-   * @property {String} id
+   * @property {Number} id
    * @property {String} first_name
    * @property {String} last_name
    * @property {String} username
