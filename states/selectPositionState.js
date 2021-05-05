@@ -12,7 +12,7 @@ class SelectPositionState extends State {
    * @param {String} [id='select-position'] state id
    */
   constructor(scheduler, id='select-position') {
-    super(/^\d+|Stack|Refresh keyboard$/, id, false);
+    super(/^\d+|Stack|Refresh keyboard|Back to menu$/, id, false);
     this._scheduler = scheduler;
   }
 
@@ -60,7 +60,7 @@ class SelectPositionState extends State {
    * @returns {string[]}
    */
   generateNavButtons() {
-    return ["Stack", "Refresh keyboard"];
+    return ["Stack", "Refresh keyboard", "Back to menu"];
   }
 
   /**
@@ -75,6 +75,8 @@ class SelectPositionState extends State {
     const stack = this._scheduler.activeStack;
     if (answer === 'Refresh keyboard') {
       return 'select-position';
+    } else if (answer === 'Back to menu') {
+      return 'menu';
     } else {
       if (answer !== 'Stack') {
         if (stack) {

@@ -46,7 +46,7 @@ class Stack {
    * @returns {boolean}
    */
   isRegistered(userId) {
-    return !!this._stack.find(s => s.user && s.user.id === userId);
+    return !!this._stack.find(s => s.user && s.user.id === +userId);
   }
 
   /**
@@ -79,7 +79,7 @@ class Stack {
    * @param {String} userId user id
    */
   removeUser(userId) {
-    const userPos = this._stack.find(s => s.user && s.user.id === userId);
+    const userPos = this._stack.find(s => s.user && s.user.id === +userId);
     delete userPos.user;
   }
 

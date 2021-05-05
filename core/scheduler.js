@@ -25,7 +25,14 @@ class Scheduler {
     this.config = config;
     this.schedule = schedule;
 
+    /**
+     *
+     * @type {{stack: Stack, lab: Lab}}
+     * @private
+     */
     this._activeStack = {};
+    this._onStackStartListeners = {};
+    this._onStackFinishListeners = {};
 
     this._startTimers();
   }
@@ -48,10 +55,39 @@ class Scheduler {
 
   /**
    * Returns active lab info if it exists
-   * @returns {Object|null}
+   * @returns {Lab|null}
    */
   get activeLabInfo() {
     return this._activeStack && this._activeStack.lab;
+  }
+
+  /**
+   *
+   * @param {String} id
+   * @param {function(stack:Stack):void}listener
+   */
+  addOnStackStartListener(id, listener) {
+    this._onStackStartListeners[id] = listener;
+  }
+
+  removeOnStackStartListener(id) {
+    delete this._onStackStartListeners[id];
+  }
+
+  addOnStackFinishListener(id, listener) {
+    this._onStackFinishListeners[id] = listener;
+  }
+
+  removeOnStackFinishListener(id) {
+    delete this._onStackFinishListeners[id];
+  }
+
+  /**
+   * Returns next lab info
+   * @returns {Lab}
+   */
+  getInfoAboutNextLab() {
+    return {name: 'next lab'};
   }
 
   /**
@@ -67,13 +103,13 @@ class Scheduler {
       const now = new Date();
 
       const timer = date.getTime() - now.getTime() - this.config.noticeBeforeStart * 60000;
-      console.log('timer', timer);
 
       if (timer > 0) {
         setTimeout(this._createStack.bind(this), timer, lab);
       }
 
-      const inLesson = date.getTime() - now.getTime() + (this.config.timeOfLesson + this.config.noticeBeforeStart) * 60000 > 0;
+      const inLesson = timer < 0 &&
+        date.getTime() - now.getTime() + (this.config.timeOfLesson + this.config.noticeBeforeStart) * 60000 > 0;
       if (inLesson) {
         this._createStack(lab);
       }
@@ -93,6 +129,10 @@ class Scheduler {
     };
 
     setTimeout(this._closeStack.bind(this), (this.config.timeOfLesson + this.config.noticeBeforeStart) * 60000);
+
+    for (let listener of Object.values(this._onStackStartListeners)) {
+      listener(this._activeStack);
+    }
   }
 
   /**
@@ -101,6 +141,11 @@ class Scheduler {
    */
   _closeStack() {
     console.log('close stack');
+
+    for (let listener of Object.values(this._onStackFinishListeners)) {
+      listener(this._activeStack);
+    }
+
     this._activeStack.stack.close();
     this._activeStack = {};
   }
