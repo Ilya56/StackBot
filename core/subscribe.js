@@ -1,5 +1,3 @@
-const fs = require('fs-extra');
-
 class Subscribe {
 
   /**
@@ -7,11 +5,13 @@ class Subscribe {
    * @param {String} storageFileName
    * @param {Scheduler} scheduler
    * @param {Bot} bot
+   * @param {UserDbHelper} userDbHelper
    */
-  constructor(storageFileName, scheduler, bot) {
+  constructor(storageFileName, scheduler, bot, userDbHelper) {
     this._storageFileName = storageFileName;
     this._scheduler = scheduler;
     this._bot = bot;
+    this._userDbHelper = userDbHelper;
     this._subsribers = [];
 
     this.loadSubscribes().catch(e => console.error(`Failed while load subscribers from ${this._storageFileName} file`, e));
@@ -20,38 +20,26 @@ class Subscribe {
   }
 
   async loadSubscribes() {
-    const exists = await fs.exists(this._storageFileName);
-    if (exists) {
-      this._subsribers = await fs.readJson(this._storageFileName);
-    }
-  }
-
-  async saveSubscribers() {
-    try {
-      await fs.writeJson(this._storageFileName, this._subsribers);
-    } catch (e) {
-      console.error(`Failed while save subscribers to ${this._storageFileName} file`, e)
-    }
+    const users = await this._userDbHelper.loadUsers();
+    this._subsribers = users.filter(u => u.subscribed).map(u => u.id);
   }
 
   /**
    *
-   * @param {String} userId
+   * @param {User} user
    */
-  subscribe(userId) {
-    console.log('subscribed');
-    this._subsribers.push(userId);
-    this.saveSubscribers();
+  subscribe(user) {
+    this._subsribers.push(user.id);
+    user.subscribed = true;
   }
 
   /**
    *
-   * @param {String} userId
+   * @param {User} user
    */
-  unsubscribe(userId) {
-    console.log('unsubscribed');
-    this._subsribers = this._subsribers.filter(s => s !== userId);
-    this.saveSubscribers();
+  unsubscribe(user) {
+    this._subsribers = this._subsribers.filter(s => s !== user.id);
+    user.subscribed = false
   }
 
   /**

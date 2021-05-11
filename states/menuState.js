@@ -48,13 +48,13 @@ class MenuState extends State {
       if (this._subscribe.isSubscribed(userId)) {
         await context.showButtons('You are already subscribed', this.getButtons(userId));
       } else {
-        this._subscribe.subscribe(userId);
+        this._subscribe.subscribe(context.ctx.user);
         await context.showText('Subscribed!');
         return 'menu';
       }
     } else if (message === 'Unsubscribe') {
       if (this._subscribe.isSubscribed(userId)) {
-        this._subscribe.unsubscribe(userId);
+        this._subscribe.unsubscribe(context.ctx.user);
         await context.showText('Unsubscribed!');
         return 'menu';
       } else {

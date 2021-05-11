@@ -19,7 +19,7 @@ class Auth {
   async loadUsers() {
     const users = await this._userBdHelper.loadUsers();
     for (let user of users) {
-      this._users[user.id] = new User(this._userBdHelper, user);
+      this._users[user.id] = user;
     }
   }
 

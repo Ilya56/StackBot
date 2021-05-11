@@ -4,6 +4,7 @@ class User {
     this._userBdHelper = userBdHelper;
     this._id = userData.id;
     this._state = userData.state;
+    this._subscribed = userData.subscribed || false;
   }
 
   get id() {
@@ -19,6 +20,15 @@ class User {
     this.save();
   }
 
+  get subscribed() {
+    return this._subscribed;
+  }
+
+  set subscribed(subscribed) {
+    this._subscribed = subscribed;
+    this.save();
+  }
+
   save() {
     this._userBdHelper.saveUser(this._toSaveObj())
       .catch(err => console.error('Error while saving user state', err));
@@ -28,7 +38,8 @@ class User {
   _toSaveObj() {
     return {
       id: this._id,
-      state: this._state
+      state: this._state,
+      subscribed: this._subscribed
     }
   }
 
