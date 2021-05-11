@@ -32,9 +32,15 @@ class AuthState extends State {
    * @returns {Promise<string>} goes to the menu state
    */
   async onData(context) {
-    const phone = ((context.getMessageData() || {}).contact || {}).phone_number || context.getMessageData().text;
-    console.log(phone);
-    return 'menu';
+    let phone = ((context.getMessageData() || {}).contact || {}).phone_number || context.getMessageData().text;
+    if (phone[0] === '+') {
+      phone = phone.slice(1);
+    }
+    if (this._auth.canConnect(phone)) {
+      return 'menu';
+    }
+    context.ctx.reply('You do not have access to this bot');
+    return 'auth';
   }
 
 }

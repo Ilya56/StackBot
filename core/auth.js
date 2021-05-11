@@ -6,10 +6,12 @@ class Auth {
    *
    * @param {Bot} bot
    * @param {UserDbHelper} userBdHelper
+   * @param {Object} config
    */
-  constructor(bot, userBdHelper) {
+  constructor(bot, userBdHelper, config) {
     this._bot = bot;
     this._userBdHelper = userBdHelper;
+    this._config = config;
     this._users = {};
 
     this.loadUsers()
@@ -29,6 +31,10 @@ class Auth {
    */
   get addUserContext() {
     return this._addUserContext.bind(this);
+  }
+
+  canConnect(phone) {
+    return (this._config.allowedPhones || []).includes(phone);
   }
 
   /**

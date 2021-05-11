@@ -26,7 +26,7 @@ const tgBot = new Telegraf(globalConfig.token);
   const userDbHelper = new UserDbHelper();
 
   const bot = new Bot(tgBot);
-  const auth = new Auth(bot, userDbHelper);
+  const auth = new Auth(bot, userDbHelper, globalConfig);
   const scheduler = new Scheduler(20, globalConfig, schedule);
   const subscribe = new Subscribe(path.join(__dirname, 'subscribers.json'), scheduler, bot, userDbHelper);
 
