@@ -30,7 +30,7 @@ class SelectPositionState extends State {
         return context.showButtons('Please choose position', this.generateButtonsArray(stack));
       }
     } else {
-      return context.showButtons('There is no active stack', ['Refresh keyboard']);
+      return context.showButtons('There is no active stack', ['Refresh keyboard', 'Back to menu']);
     }
   }
 
@@ -60,7 +60,7 @@ class SelectPositionState extends State {
    * @returns {string[]}
    */
   generateNavButtons() {
-    return ["Stack", "Refresh keyboard", "Back to menu"];
+    return ['Stack', 'Refresh keyboard', 'Back to menu'];
   }
 
   /**

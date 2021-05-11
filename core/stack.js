@@ -42,7 +42,7 @@ class Stack {
 
   /**
    * Returns true if user is on stack
-   * @param {String} userId user id
+   * @param {String|Number} userId user id
    * @returns {boolean}
    */
   isRegistered(userId) {

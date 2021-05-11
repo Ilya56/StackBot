@@ -90,6 +90,14 @@ class Context {
     return Markup.button.contactRequest(text);
   }
 
+  getUserState() {
+    return this._ctx.user.state;
+  }
+
+  setUserState(state) {
+    this._ctx.user.state = state;
+  }
+
 }
 
 module.exports = Context;

@@ -1,5 +1,4 @@
 const Context = require('./context');
-const { Markup } = require('telegraf');
 
 /**
  * This is the base class of the bot. This class contains and controls states
@@ -13,6 +12,11 @@ class Bot {
   constructor(bot) {
     this._bot = bot;
     this._states = {};
+    this._firstStateId = '';
+  }
+
+  get firstStateId() {
+    return this._firstStateId;
   }
 
   /**
@@ -59,8 +63,8 @@ class Bot {
     }
 
     const startState = Object.values(this._states).find(s => s.isFirst);
+    this._firstStateId = startState.id;
     this._bot.start(this._startFirstState(startState));
-
   }
 
   /**

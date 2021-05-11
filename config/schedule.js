@@ -1,8 +1,8 @@
 // manual schedule config
 module.exports = [
   {
-    date: '05.05.2021',
-    time: '16:20',
+    date: '11.05.2021',
+    time: '21:38',
     eachWeek: 'one',
     name: 'Lab1'
   }

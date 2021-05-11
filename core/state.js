@@ -51,18 +51,14 @@ class State {
 
     const onStart = this.onStart;
     this.onStart = function(context) {
-      const userId = context.getUserId();
-      state._isActive[userId] = true;
+      context.setUserState(this.id);
       return onStart.call(state, context);
     }
 
     const onData = this.onData;
     this.onData = async function(context) {
-      const userId = context.getUserId();
-      if (state._isActive[userId]) {
-        const nextId = await onData.call(state, context);
-        delete state._isActive[userId];
-        return nextId;
+      if (context.getUserState() === this.id) {
+        return onData.call(state, context);
       }
     }
   }

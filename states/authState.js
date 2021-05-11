@@ -7,10 +7,12 @@ class AuthState extends State {
 
   /**
    * Creates auth state
+   * @param {Auth} auth
    * @param {String} [id='auth'] state id
    */
-  constructor(id='auth') {
+  constructor(auth, id='auth') {
     super([/\(?([0-9]{3})\)?([ .-]?)([0-9]{3})\2([0-9]{4})/, {type: 'event', event: 'contact'}], id, true);
+    this._auth = auth;
   }
 
   /**
