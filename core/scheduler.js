@@ -12,18 +12,20 @@ class Scheduler {
    * @property {String} time time one of lesson
    * @property {String} eachWeek can be 'one' or 'two'
    * @property {String} name lab name
+   * @property {String} teacher teacher name
+   * @property {String} room room number
    */
 
   /**
    * Create scheduler instance. No need to create it twice
    * @param {Number} maxCount
    * @param {Object} config
-   * @param {Array<Lab>} schedule
+   * @param {ScheduleDbHelper} scheduleDbHelper
    */
-  constructor(maxCount, config, schedule) {
+  constructor(maxCount, config, scheduleDbHelper) {
     this._maxCount = maxCount;
+    this._scheduleDbHelper = scheduleDbHelper;
     this.config = config;
-    this.schedule = schedule;
 
     /**
      *
@@ -33,6 +35,7 @@ class Scheduler {
     this._activeStack = {};
     this._onStackStartListeners = {};
     this._onStackFinishListeners = {};
+    this._schedule = [];
 
     this._startTimers();
   }
@@ -87,15 +90,29 @@ class Scheduler {
    * @returns {Lab}
    */
   getInfoAboutNextLab() {
-    return {name: 'next lab'};
+    const copy = Object.assign({}, this._schedule);
+    copy.sort((a, b) => {
+      if (a.date > b.date) {
+        return a.date
+      }
+      if (a.date === b.date) {
+        return a.time - b.time;
+      }
+      return b.date;
+    });
+    const now = new Date().toISOString();
+    const currentDate = now.slice(0, now.indexOf('T')).split('-').reverse().join('.');
+    const currentTime = now.slice(now.indexOf('T') + 1, now.indexOf('T') + 6);
+    return copy.find(l => l.date >= currentDate && l.time >= currentTime);
   }
 
   /**
    * Starts timers for each lesson. Here's a simplest setTimeout method that creates a timer for each lesson.
    * @private
    */
-  _startTimers() {
-    this.schedule.forEach(lab => {
+  async _startTimers() {
+    this._schedule = await this._scheduleDbHelper.getAll();
+    this._schedule.forEach(lab => {
       const date = new Date(lab.date.split('.').reverse().join('-'));
       const time = lab.time.split(':');
       date.setHours(+time[0]);
@@ -122,7 +139,7 @@ class Scheduler {
    * @private
    */
   _createStack(lab) {
-    console.log('start stack');
+    console.debug('start stack');
     this._activeStack = {
       stack: new Stack(this._maxCount),
       lab
@@ -140,7 +157,7 @@ class Scheduler {
    * @private
    */
   _closeStack() {
-    console.log('close stack');
+    console.debug('close stack');
 
     for (let listener of Object.values(this._onStackFinishListeners)) {
       listener(this._activeStack);

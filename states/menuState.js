@@ -66,10 +66,11 @@ class MenuState extends State {
   getInfoAsString() {
     let info = this._scheduler.activeLabInfo;
     if (info) {
-      return `Lab name: ${info.name}\nStarted at ${info.date} ${info.time}\nIt takes place ${info.eachWeek} time for a week`;
+      return `Lab name: ${info.name}\nTeacher: ${info.teacher}\nRoom: ${info.room}\n` +
+        `Started at ${info.date} ${info.time}\nIt takes place ${info.eachWeek} time for a week`;
     } else {
       info = this._scheduler.getInfoAboutNextLab();
-      return `Now there is no active lab. The next lab is ${info.name}`;
+      return `Now there is no active lab. The next lab is ${info.name} at ${info.date} ${info.time}`;
     }
   }
 }

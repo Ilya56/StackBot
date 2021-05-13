@@ -2,47 +2,67 @@ const { Telegraf } = require('telegraf');
 const path = require('path');
 
 const Bot = require('./bot/core');
+const Scheduler = require('./core/scheduler');
+const Subscribe = require('./core/subscribe')
+const Auth = require('./core/auth');
+
 const AuthState = require('./states/authState');
 const SelectPositionState = require('./states/selectPositionState');
 const StackState = require('./states/stackState');
 const SelectPositionWithExtraButtonsState = require('./states/selectPositionWithExtraButtonsState');
 const MenuState = require('./states/menuState');
 
-const Scheduler = require('./core/scheduler');
-const Subscribe = require('./core/subscribe')
-const Auth = require('./core/auth');
+const Database = require('./db/core');
+const UserDbHelper = require('./db/userDbHelper');
+const ScheduleDbHelper = require('./db/scheduleDbHelper');
+const ExpirationDbHelper = require("./integration/expirationDbHelper");
 
-const Database = require("./db/core");
+const KpiSchedule = require("./integration/kpiSchedule");
 
 const globalConfig = require('./config/global');
-const schedule = require('./config/schedule');
-const UserDbHelper = require("./db/userDbHelper");
+const kpiConfig = require('./config/kpiSchedule');
 
 const tgBot = new Telegraf(globalConfig.token);
 
 !async function() {
-  const database = new Database('mongodb://localhost:27017/stackBot');
-  await database.init();
-  const userDbHelper = new UserDbHelper();
+  try {
+    // init db
+    const database = new Database('mongodb://localhost:27017/stackBot');
+    await database.init();
+    const userDbHelper = new UserDbHelper();
+    const scheduleDbHelper = new ScheduleDbHelper();
+    const expirationDbHelper = new ExpirationDbHelper();
 
-  const bot = new Bot(tgBot);
-  const auth = new Auth(bot, userDbHelper, globalConfig);
-  const scheduler = new Scheduler(20, globalConfig, schedule);
-  const subscribe = new Subscribe(path.join(__dirname, 'subscribers.json'), scheduler, bot, userDbHelper);
+    // init services
+    const bot = new Bot(tgBot);
+    const auth = new Auth(bot, userDbHelper, globalConfig);
 
-  const authState = new AuthState(auth);
-  const menuState = new MenuState(subscribe, scheduler);
-  // const selectPositionState = new SelectPositionState(scheduler);
-  const selectPositionState = new SelectPositionWithExtraButtonsState(scheduler);
-  const stackState = new StackState(scheduler);
+    const kpiSchedule = new KpiSchedule(kpiConfig, scheduleDbHelper, expirationDbHelper);
+    await kpiSchedule.execute();
 
-  tgBot.use(auth.addUserContext);
+    const scheduler = new Scheduler(20, globalConfig, scheduleDbHelper);
+    const subscribe = new Subscribe(path.join(__dirname, 'subscribers.json'), scheduler, bot, userDbHelper);
 
-  bot.addState(authState);
-  bot.addState(menuState);
-  bot.addState(selectPositionState);
-  bot.addState(stackState);
-  bot.initStates();
+    // init states
+    const authState = new AuthState(auth);
+    const menuState = new MenuState(subscribe, scheduler);
+    // const selectPositionState = new SelectPositionState(scheduler);
+    const selectPositionState = new SelectPositionWithExtraButtonsState(scheduler);
+    const stackState = new StackState(scheduler);
 
-  tgBot.launch();
+    // use middlewares
+    tgBot.use(auth.addUserContext);
+
+    // add states to bot context
+    bot.addState(authState);
+    bot.addState(menuState);
+    bot.addState(selectPositionState);
+    bot.addState(stackState);
+    bot.initStates();
+
+    // start
+    tgBot.launch();
+  } catch (e) {
+    console.error('Error while loading bot', e);
+  }
 }();
