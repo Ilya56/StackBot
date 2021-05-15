@@ -9,7 +9,7 @@ class ScheduleDbHelper {
       time: String,
       eachWeek: String,
       name: String,
-      teacherName: String,
+      teacher: String,
       room: String
     });
     this._lab = mongoose.model('Lab', this._schema);

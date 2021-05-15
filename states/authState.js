@@ -8,11 +8,13 @@ class AuthState extends State {
   /**
    * Creates auth state
    * @param {Auth} auth
+   * @param {GeneralConfig} config
    * @param {String} [id='auth'] state id
    */
-  constructor(auth, id='auth') {
+  constructor(auth, config, id='auth') {
     super([/\(?([0-9]{3})\)?([ .-]?)([0-9]{3})\2([0-9]{4})/, {type: 'event', event: 'contact'}], id, true);
     this._auth = auth;
+    this._config = config;
   }
 
   /**
@@ -35,6 +37,11 @@ class AuthState extends State {
     let phone = ((context.getMessageData() || {}).contact || {}).phone_number || context.getMessageData().text;
     if (phone[0] === '+') {
       phone = phone.slice(1);
+    }
+    const teacher = this._config.teachers.find(t => t.phone === phone);
+    if (teacher) {
+      context.ctx.user.makeItTeacher(teacher.name);
+      return 'teacher';
     }
     if (this._auth.canConnect(phone)) {
       return 'menu';

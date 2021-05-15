@@ -7,13 +7,12 @@ class UserDbHelper {
     this._schema = new mongoose.Schema({
       _id: String,
       state: String,
-      subscribed: Boolean
+      name: String,
+      phone: String,
+      subscribed: Boolean,
+      isTeacher: Boolean
     });
     this._user = mongoose.model('User', this._schema);
-  }
-
-  get User() {
-    return this._user;
   }
 
   /**
@@ -25,6 +24,11 @@ class UserDbHelper {
     return users.map(u => this._userFromModel(u));
   }
 
+  /**
+   *
+   * @param {User} user
+   * @returns {Promise<void>}
+   */
   async saveUser(user) {
     const userId = user.id;
     delete user.id;
@@ -34,6 +38,25 @@ class UserDbHelper {
     }
   }
 
+  async checkUserExistsByPhone(phone) {
+    return !!await this._user.findOne({phone});
+  }
+
+  /**
+   * @typedef {Object} UserDB
+   * @property {String} _id
+   * @property {String} state
+   * @property {String} name
+   * @property {Boolean} subscribed
+   * @property {Boolean} isTeacher
+   */
+
+  /**
+   *
+   * @param {UserDB} user
+   * @returns {User}
+   * @private
+   */
   _userFromModel(user) {
     return new User(this, user);
   }

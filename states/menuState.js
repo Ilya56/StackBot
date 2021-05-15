@@ -12,7 +12,7 @@ class MenuState extends State {
    * @param {String} [id='menu'] state id
    */
   constructor(subscribe, scheduler, id='menu') {
-    super(['Select position in stack', 'About lab', 'Subscribe', 'Unsubscribe'], id, false);
+    super(['Select position in stack', 'About lab', 'Subscribe', 'Unsubscribe', 'Change name to display'], id, false);
     this._subscribe = subscribe;
     this._scheduler = scheduler;
   }
@@ -28,6 +28,7 @@ class MenuState extends State {
 
   getButtons(userId) {
     let buttons = [['Select position in stack'], ['About lab']];
+    // let buttons = [['Select position in stack'], ['About lab'], ['Change name to display']];
     if (this._subscribe.isSubscribed(userId)) {
       buttons[1].push('Unsubscribe');
     } else {
@@ -60,6 +61,8 @@ class MenuState extends State {
       } else {
         await context.showButtons('You are already unsubscribed', this.getButtons(userId));
       }
+    // } else if (message === 'Change name to display') {
+    //   return 'change-name';
     }
   }
 
@@ -70,7 +73,11 @@ class MenuState extends State {
         `Started at ${info.date} ${info.time}\nIt takes place ${info.eachWeek} time for a week`;
     } else {
       info = this._scheduler.getInfoAboutNextLab();
-      return `Now there is no active lab. The next lab is ${info.name} at ${info.date} ${info.time}`;
+      if (info) {
+        return `Now there is no active lab. The next lab is ${info.name} at ${info.date} ${info.time}`;
+      } else {
+        return 'There is no next lab'
+      }
     }
   }
 }

@@ -17,6 +17,7 @@ class Subscribe {
     this.loadSubscribes().catch(e => console.error(`Failed while load subscribers from ${this._storageFileName} file`, e));
 
     this._scheduler.addOnStackStartListener('subscribe', this.onStackStart.bind(this));
+    this._scheduler.subscribe = this;
   }
 
   async loadSubscribes() {
@@ -54,6 +55,12 @@ class Subscribe {
   async onStackStart() {
     for (let subscriber of this._subsribers) {
       await this._bot.sendDirectMessage(subscriber, `Stack for ${this._scheduler.activeLabInfo.name} just created`);
+    }
+  }
+
+  async callUser(user) {
+    if (this._subsribers.includes(String(user.id))) {
+      await this._bot.sendDirectMessage(user.id, `It's your turn, go to the teacher`);
     }
   }
 

@@ -70,27 +70,28 @@ class Bot {
   /**
    * Creates custom context object
    * @param {State} state
-   * @param {function(context: Context): void} cb
-   * @returns {function(context: Context)}
+   * @param {function(context: Context, next: Function): void} cb
+   * @returns {function(context: Context, next: Function)}
    * @private
    */
   _createContextWrapper(state, cb) {
-    return function (ctx) {
+    return function (ctx, next) {
       const context = new Context(ctx);
-      return cb(context);
+      return cb(context, next);
     }
   }
 
   /**
    * Starts first state after /start command. Execute first state onStart method
    * @param {State} state
-   * @returns {function(Context)} call handler
+   * @returns {function(context: Context, next: Function)} call handler
    * @private
    */
   _startFirstState(state) {
-    return this._createContextWrapper(state, async function (context) {
+    return this._createContextWrapper(state, async function (context, next) {
       try {
-        return state.onStart(context);
+        await state.onStart(context);
+        return next();
       } catch (e) {
         console.error(`Error while processing onStart event for ${state.id} state`, e);
         await context.showText('Some error: ' + e.message);
@@ -101,19 +102,18 @@ class Bot {
   /**
    * Execute state onData method with user answer and execute next state onStart method
    * @param {State} state
-   * @returns {function(Context)} call handler
+   * @returns {function(context: Context, next: Function)} call handler
    * @private
    */
   _triggerState(state) {
-    return this._createContextWrapper(state, async context => {
+    return this._createContextWrapper(state, async (context, next) => {
       try {
         const nextId = await state.onData(context);
         const nextState = this._states[nextId];
         if (nextState) {
           return nextState.onStart(context);
         }
-        const userId = context.getUserId();
-        state._isActive[userId] = true;
+        return next();
       } catch (e) {
         console.error(`Error while processing onData event for ${state.id} state`, e);
         await context.showText('Some error: ' + e.message);

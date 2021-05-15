@@ -11,6 +11,7 @@ const SelectPositionState = require('./states/selectPositionState');
 const StackState = require('./states/stackState');
 const SelectPositionWithExtraButtonsState = require('./states/selectPositionWithExtraButtonsState');
 const MenuState = require('./states/menuState');
+const TeacherState = require('./states/teacherState');
 
 const Database = require('./db/core');
 const UserDbHelper = require('./db/userDbHelper');
@@ -37,18 +38,19 @@ const tgBot = new Telegraf(globalConfig.token);
     const bot = new Bot(tgBot);
     const auth = new Auth(bot, userDbHelper, globalConfig);
 
-    const kpiSchedule = new KpiSchedule(kpiConfig, scheduleDbHelper, expirationDbHelper);
-    await kpiSchedule.execute();
+    // const kpiSchedule = new KpiSchedule(kpiConfig, scheduleDbHelper, expirationDbHelper);
+    // await kpiSchedule.execute();
 
     const scheduler = new Scheduler(20, globalConfig, scheduleDbHelper);
     const subscribe = new Subscribe(path.join(__dirname, 'subscribers.json'), scheduler, bot, userDbHelper);
 
     // init states
-    const authState = new AuthState(auth);
+    const authState = new AuthState(auth, globalConfig);
     const menuState = new MenuState(subscribe, scheduler);
     // const selectPositionState = new SelectPositionState(scheduler);
     const selectPositionState = new SelectPositionWithExtraButtonsState(scheduler);
     const stackState = new StackState(scheduler);
+    const teacherState = new TeacherState(scheduler);
 
     // use middlewares
     tgBot.use(auth.addUserContext);
@@ -58,6 +60,7 @@ const tgBot = new Telegraf(globalConfig.token);
     bot.addState(menuState);
     bot.addState(selectPositionState);
     bot.addState(stackState);
+    bot.addState(teacherState);
     bot.initStates();
 
     // start

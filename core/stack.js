@@ -6,9 +6,11 @@ class Stack {
   /**
    * Creates new stack
    * @param {Number} maxCount max number of students
+   * @param {Subscribe} subscribe
    */
-  constructor(maxCount) {
+  constructor(maxCount, subscribe) {
     this._maxCount = maxCount;
+    this._subscriber = subscribe;
     this.active = true;
     /**
      *
@@ -22,6 +24,8 @@ class Stack {
         user: null
       }
     }
+
+    this._currentIndex = -1;
   }
 
   /**
@@ -38,6 +42,36 @@ class Stack {
    */
   get stack() {
     return this._stack;
+  }
+
+  get currentIndex() {
+    return this._currentIndex;
+  }
+
+  next() {
+    this._currentIndex++;
+  }
+
+  previous() {
+    this._currentIndex--;
+  }
+
+  callFirst() {
+    this._currentIndex = 0;
+    return this.call();
+  }
+
+  async call() {
+    const pos = this._getActiveAtIndex(this._currentIndex);
+    if (!pos) {
+      throw new Error('There is no next user');
+    }
+    await this._subscriber.callUser(pos.user);
+  }
+
+  callNext() {
+    this._currentIndex++;
+    return this.call();
   }
 
   /**
@@ -124,6 +158,10 @@ class Stack {
   getRandomPosition() {
     const emptyPositions = this._stack.filter(s => !s.user);
     return emptyPositions[Math.floor(Math.random() * emptyPositions.length)].number;
+  }
+
+  _getActiveAtIndex(index) {
+    return this._stack.filter(s => s.user)[index];
   }
 
 }

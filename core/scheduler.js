@@ -26,6 +26,7 @@ class Scheduler {
     this._maxCount = maxCount;
     this._scheduleDbHelper = scheduleDbHelper;
     this.config = config;
+    this._subscribe = {};
 
     /**
      *
@@ -85,12 +86,16 @@ class Scheduler {
     delete this._onStackFinishListeners[id];
   }
 
+  set subscribe(subscriber) {
+    this._subscribe = subscriber;
+  }
+
   /**
    * Returns next lab info
    * @returns {Lab}
    */
   getInfoAboutNextLab() {
-    const copy = Object.assign({}, this._schedule);
+    const copy = [...this._schedule];
     copy.sort((a, b) => {
       if (a.date > b.date) {
         return a.date
@@ -141,7 +146,7 @@ class Scheduler {
   _createStack(lab) {
     console.debug('start stack');
     this._activeStack = {
-      stack: new Stack(this._maxCount),
+      stack: new Stack(this._maxCount, this._subscribe),
       lab
     };
 
