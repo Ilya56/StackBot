@@ -30,9 +30,9 @@ class StackState extends State {
       } else {
         buttons.push('Cancel choice');
       }
-      return context.showButtons(stack.getStackAsString(), buttons);
+      return context.sendButtons(stack.getStackAsString(), buttons);
     } else {
-      return context.showButtons('There is no active stack', ['Back']);
+      return context.sendButtons('There is no active stack', ['Back']);
     }
   }
 

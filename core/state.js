@@ -18,7 +18,6 @@ class State {
     this.trigger = trigger;
     this.id = id;
     this.isFirst = isFirst;
-    this._isActive = {};
   }
 
   /**
@@ -28,7 +27,7 @@ class State {
    * @returns {Promise}
    */
   async onStart(context) {
-    return context.showText('Default state text');
+    return context.sendText('Default state text');
   }
 
   /**

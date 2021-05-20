@@ -23,7 +23,7 @@ class MenuState extends State {
    * @returns {Promise}
    */
   async onStart(context) {
-    return context.showButtons('How can I help you?', this.getButtons(context.getUserId()));
+    return context.sendButtons('How can I help you?', this.getButtons(context.getUserId()));
   }
 
   getButtons(userId) {
@@ -43,23 +43,23 @@ class MenuState extends State {
     if (message === 'Select position in stack') {
       return 'select-position';
     } else if (message === 'About lab') {
-      await context.showButtons(this.getInfoAsString(), this.getButtons(userId));
+      await context.sendButtons(this.getInfoAsString(), this.getButtons(userId));
       return 'menu';
     } else if (message === 'Subscribe') {
       if (this._subscribe.isSubscribed(userId)) {
-        await context.showButtons('You are already subscribed', this.getButtons(userId));
+        await context.sendButtons('You are already subscribed', this.getButtons(userId));
       } else {
-        this._subscribe.subscribe(context.ctx.user);
-        await context.showText('Subscribed!');
+        this._subscribe.subscribe(context.getUser());
+        await context.sendText('Subscribed!');
         return 'menu';
       }
     } else if (message === 'Unsubscribe') {
       if (this._subscribe.isSubscribed(userId)) {
-        this._subscribe.unsubscribe(context.ctx.user);
-        await context.showText('Unsubscribed!');
+        this._subscribe.unsubscribe(context.getUser());
+        await context.sendText('Unsubscribed!');
         return 'menu';
       } else {
-        await context.showButtons('You are already unsubscribed', this.getButtons(userId));
+        await context.sendButtons('You are already unsubscribed', this.getButtons(userId));
       }
     // } else if (message === 'Change name to display') {
     //   return 'change-name';

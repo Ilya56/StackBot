@@ -26,7 +26,7 @@ class Context {
    * @param {String} text reply text
    * @returns {Promise}
    */
-  showText(text) {
+  sendText(text) {
     return this._ctx.replyWithMarkdown(text);
   }
 
@@ -37,7 +37,7 @@ class Context {
    * array of strings and button objects or an array of arrays of strings and button objects
    * @returns {Promise}
    */
-  showButtons(text, buttons) {
+  sendButtons(text, buttons) {
     return this._ctx.replyWithMarkdown(text,
       Markup.keyboard(buttons)
         // .oneTime()
@@ -96,6 +96,14 @@ class Context {
 
   setUserState(state) {
     this._ctx.user.state = state;
+  }
+
+  getUserName() {
+    return this._ctx.user.name;
+  }
+
+  getUser() {
+    return this._ctx.user;
   }
 
 }

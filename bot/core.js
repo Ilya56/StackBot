@@ -94,7 +94,7 @@ class Bot {
         return next();
       } catch (e) {
         console.error(`Error while processing onStart event for ${state.id} state`, e);
-        await context.showText('Some error: ' + e.message);
+        await context.sendText('Some error: ' + e.message);
       }
     });
   }
@@ -116,7 +116,7 @@ class Bot {
         return next();
       } catch (e) {
         console.error(`Error while processing onData event for ${state.id} state`, e);
-        await context.showText('Some error: ' + e.message);
+        await context.sendText('Some error: ' + e.message);
       }
     });
   }

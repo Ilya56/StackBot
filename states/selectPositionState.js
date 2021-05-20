@@ -25,12 +25,12 @@ class SelectPositionState extends State {
     const stack = this._scheduler.activeStack;
     if (stack) {
       if (stack.isRegistered(context.getUserId)) {
-        return context.showButtons('You already choose position', this.generateNavButtons());
+        return context.sendButtons('You already choose position', this.generateNavButtons());
       } else {
-        return context.showButtons('Please choose position', this.generateButtonsArray(stack));
+        return context.sendButtons('Please choose position', this.generateButtonsArray(stack));
       }
     } else {
-      return context.showButtons('There is no active stack', ['Refresh keyboard', 'Back to menu']);
+      return context.sendButtons('There is no active stack', ['Refresh keyboard', 'Back to menu']);
     }
   }
 
@@ -80,13 +80,13 @@ class SelectPositionState extends State {
     } else {
       if (answer !== 'Stack') {
         if (stack) {
-          if (stack.isRegistered(context.getUserData().id)) {
+          if (stack.isRegistered(context.getUserId())) {
             return 'stack';
           }
           try {
             this.addUserToStack(stack, context.getUserData(), answer);
           } catch (e) {
-            return context.showText('Some error: ' + e.message);
+            return context.sendText('Some error: ' + e.message);
           }
         }
       }

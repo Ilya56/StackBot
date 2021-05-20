@@ -23,7 +23,7 @@ class AuthState extends State {
    * @returns {Promise}
    */
   async onStart(context) {
-    return context.showButtons('Send your phone please', [
+    return context.sendButtons('Send your phone please', [
       context.getContactRequestButton('Send phone')
     ]);
   }
@@ -40,13 +40,13 @@ class AuthState extends State {
     }
     const teacher = this._config.teachers.find(t => t.phone === phone);
     if (teacher) {
-      context.ctx.user.makeItTeacher(teacher.name);
+      context.getUser().makeItTeacher(teacher.name);
       return 'teacher';
     }
-    if (this._auth.canConnect(phone)) {
+    if (await this._auth.canConnect(context.getUserId(), phone)) {
       return 'menu';
     }
-    context.ctx.reply('You do not have access to this bot');
+    await context.sendText('You do not have access to this bot');
     return 'auth';
   }
 
