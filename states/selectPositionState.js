@@ -12,7 +12,7 @@ class SelectPositionState extends State {
    * @param {String} [id='select-position'] state id
    */
   constructor(scheduler, id='select-position') {
-    super(/^\d+|Stack|Refresh keyboard|Back to menu$/, id, false);
+    super([/^\d+$/, 'Stack', 'Refresh keyboard', 'Back to menu'], id, false);
     this._scheduler = scheduler;
   }
 
@@ -73,18 +73,18 @@ class SelectPositionState extends State {
   async onData(context) {
     const answer = context.getMessageData().text
     const stack = this._scheduler.activeStack;
-    if (answer === 'Refresh keyboard') {
+    if (context.isEqual(answer, 'Refresh keyboard')) {
       return 'select-position';
-    } else if (answer === 'Back to menu') {
+    } else if (context.isEqual(answer, 'Back to menu')) {
       return 'menu';
     } else {
-      if (answer !== 'Stack') {
+      if (!context.isEqual(answer, 'Stack')) {
         if (stack) {
           if (stack.isRegistered(context.getUserId())) {
             return 'stack';
           }
           try {
-            this.addUserToStack(stack, context.getUserData(), answer);
+            this.addUserToStack(context, stack, context.getUserData(), answer);
           } catch (e) {
             return context.sendText('Some error: ' + e.message);
           }
@@ -96,11 +96,12 @@ class SelectPositionState extends State {
 
   /**
    * Add user to stack on given position
+   * @param {Context} context context
    * @param {Stack} stack current stack
    * @param {UserData} user telegraf user data
    * @param {Number|String} number position
    */
-  addUserToStack(stack, user, number) {
+  addUserToStack(context, stack, user, number) {
     stack.addUser(user, number);
   }
 

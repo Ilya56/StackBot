@@ -13,7 +13,6 @@ class SelectPositionWithExtraButtonsState extends SelectPositionState {
    */
   constructor(scheduler, id='select-position') {
     super(scheduler, id);
-    this.trigger = [this.trigger];
     this.trigger.push('First', 'Last', 'Random');
   }
 
@@ -23,15 +22,15 @@ class SelectPositionWithExtraButtonsState extends SelectPositionState {
     return buttons;
   }
 
-  addUserToStack(stack, user, number) {
-    if (number === 'First') {
+  addUserToStack(context, stack, user, number) {
+    if (context.isEqual(number, 'First')) {
       number = stack.getFirstEmptyNumber();
-    } else if (number === 'Last') {
+    } else if (context.isEqual(number, 'Last')) {
       number = stack.getLastEmptyNumber();
-    } else if (number === 'Random') {
+    } else if (context.isEqual(number, 'Random')) {
       number = stack.getRandomPosition();
     }
-    super.addUserToStack(stack, user, number);
+    super.addUserToStack(context, stack, user, number);
   }
 }
 

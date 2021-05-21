@@ -27,20 +27,34 @@ class Context {
    * @returns {Promise}
    */
   sendText(text) {
-    return this._ctx.replyWithMarkdown(text);
+    return this._ctx.replyWithMarkdown(this._ctx.i18n.t(text));
   }
 
   /**
    * Reply with text with bottom keyboard
-   * @param {String} text reply text
+   * @param {String|{message:String, context:Object}} text reply text
    * @param {Array<String|Object>|Array<Array<String|Object>>} buttons buttons on the bottom keyboard as an
    * array of strings and button objects or an array of arrays of strings and button objects
    * @returns {Promise}
    */
   sendButtons(text, buttons) {
-    return this._ctx.replyWithMarkdown(text,
+    for (let i = 0; i < buttons.length; i++) {
+      if (Array.isArray(buttons[i])) {
+        for (let j = 0; j < buttons[i].length; j++) {
+          buttons[i][j] = this._ctx.i18n.t(buttons[i][j]);
+        }
+      }
+      if (typeof buttons[i] === 'string') {
+        buttons[i] = this._ctx.i18n.t(buttons[i]);
+      }
+    }
+    if (typeof text === 'object') {
+      return this._ctx.replyWithMarkdown(this._ctx.i18n.t(text.message, text.context),
+        Markup.keyboard(buttons)
+          .resize());
+    }
+    return this._ctx.replyWithMarkdown(this._ctx.i18n.t(text),
       Markup.keyboard(buttons)
-        // .oneTime()
         .resize());
   }
 
@@ -87,7 +101,7 @@ class Context {
    * @returns {Object}
    */
   getContactRequestButton(text) {
-    return Markup.button.contactRequest(text);
+    return Markup.button.contactRequest(this._ctx.i18n.t(text));
   }
 
   getUserState() {
@@ -104,6 +118,10 @@ class Context {
 
   getUser() {
     return this._ctx.user;
+  }
+
+  isEqual(message, text) {
+    return this._ctx.i18n.t(text) === message;
   }
 
 }

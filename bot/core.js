@@ -1,4 +1,5 @@
 const Context = require('./context');
+const { match } = require('telegraf-i18n')
 
 /**
  * This is the base class of the bot. This class contains and controls states
@@ -49,7 +50,9 @@ class Bot {
         state.trigger = [state.trigger];
       }
       for (let trigger of state.trigger) {
-        if (typeof trigger === 'string' || trigger instanceof RegExp) {
+        if (typeof trigger === 'string') {
+          this._bot.hears(match(trigger), this._triggerState(state));
+        } else if (trigger instanceof RegExp) {
           this._bot.hears(trigger, this._triggerState(state));
         } else if (trigger.type === 'method') {
           this._bot[trigger.method](this._triggerState(state));

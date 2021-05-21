@@ -31,14 +31,15 @@ class TeacherState extends State {
     const userId = context.getUserId();
     const stack = this._scheduler.activeStack;
     try {
-      if (message === 'Call first student') {
+      if (context.isEqual(message, 'Call first student')) {
         await stack.callFirst();
-      } else if (message === 'Next student') {
+      } else if (context.isEqual(message, 'Next student')) {
         await stack.callNext();
-      } else if (message === 'Show stack') {
+      } else if (context.isEqual(message, 'Show stack')) {
         await context.sendText(stack.getStackAsString());
       } else if (message.match(/[1-5]/)) {
         this._markByUserId[userId] = message;
+        await stack.callNext();
       }
     } catch (e) {
       if (e.message === 'There is no next user') {

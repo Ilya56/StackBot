@@ -1,4 +1,5 @@
-const { Telegraf } = require('telegraf');
+const { Telegraf, session } = require('telegraf');
+const TelegrafI18n = require('telegraf-i18n')
 const path = require('path');
 
 const Bot = require('./bot/core');
@@ -24,6 +25,12 @@ const globalConfig = require('./config/global');
 const kpiConfig = require('./config/kpiSchedule');
 
 const tgBot = new Telegraf(globalConfig.token);
+const i18n = new TelegrafI18n({
+  useSession: true,
+  defaultLanguage: 'en',
+  defaultLanguageOnMissing: true,
+  directory: path.resolve(__dirname, 'locales')
+});
 
 !async function() {
   try {
@@ -54,6 +61,8 @@ const tgBot = new Telegraf(globalConfig.token);
 
     // use middlewares
     tgBot.use(auth.addUserContext);
+    tgBot.use(session());
+    tgBot.use(i18n.middleware());
 
     // add states to bot context
     bot.addState(authState);
