@@ -102,7 +102,11 @@ class Stack {
       throw new Error('invalid number range');
     }
     if (number) {
-      this._stack[number - 1].user = user;
+      if (!this._stack[number - 1].user) {
+        this._stack[number - 1].user = user;
+      } else {
+        throw new Error('This number is already taken');
+      }
     } else {
       throw new Error('Stack.addUser: Invalid number argument');
     }

@@ -33,5 +33,6 @@
   "Choice mark or just call next student": "Choice mark or just call next student",
   "There is no active lab lesson": "There is no active lab lesson",
   "Stack is empty": "Stack is empty",
-  "There is no next user": "There is no next user"
+  "There is no next user": "There is no next user",
+  "This number is already taken": "This number is already taken"
 }

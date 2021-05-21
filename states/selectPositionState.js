@@ -86,6 +86,10 @@ class SelectPositionState extends State {
           try {
             this.addUserToStack(context, stack, context.getUserData(), answer);
           } catch (e) {
+            if (e.message === 'This number is already taken') {
+              return context.sendText(e.message);
+            }
+            console.error('Error while processing select position', e);
             return context.sendText('Some error: ' + e.message);
           }
         }

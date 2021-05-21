@@ -33,5 +33,6 @@
   "There is no active lab lesson": "Сейчас нет лабы",
   "Stack is empty": "Очередь пустая",
   "Back": "Назад",
-  "There is no next user": "Следующего студента нет"
+  "There is no next user": "Следующего студента нет",
+  "This number is already taken": "Это место уже занято"
 }

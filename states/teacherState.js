@@ -45,7 +45,7 @@ class TeacherState extends State {
       if (e.message === 'There is no next user') {
         await context.sendText(e.message);
       } else {
-        console.error(e);
+        console.error('Error in teacher state onData', e);
       }
     }
 
