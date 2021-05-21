@@ -34,7 +34,7 @@ class AuthState extends State {
    * @returns {Promise<string>} goes to the menu state
    */
   async onData(context) {
-    let phone = ((context.getMessageData() || {}).contact || {}).phone_number || context.getMessageData().text;
+    let phone = ((context.getMessageData() || {}).contact || {}).phone_number || context.getMessageText();
     if (phone[0] === '+') {
       phone = phone.slice(1);
     }

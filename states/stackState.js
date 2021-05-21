@@ -37,7 +37,7 @@ class StackState extends State {
   }
 
   async onData(context) {
-    const message = context.getMessageData().text;
+    const message = context.getMessageText();
     const stack = this._scheduler.activeStack;
     if ((context.isEqual(message, 'Back') && (!stack || !stack.isRegistered(context.getUserId())))) {
       return 'select-position';

@@ -7,8 +7,7 @@ class User {
     this._subscribed = userData.subscribed || false;
     this._isTeacher = userData.isTeacher || false;
     this._phone = userData.phone;
-
-    this.name = userData.name;
+    this._name = userData.name;
   }
 
   get id() {
@@ -41,6 +40,20 @@ class User {
     return this._phone;
   }
 
+  set phone(phone) {
+    this._phone = phone;
+    this.save();
+  }
+
+  get name() {
+    return this._name;
+  }
+
+  set name(name) {
+    this._name = name;
+    this.save();
+  }
+
   save() {
     this._userBdHelper.saveUser(this._toSaveObj())
       .catch(err => console.error('Error while saving user state', err));
@@ -49,7 +62,7 @@ class User {
 
   makeItTeacher(name) {
     this._isTeacher = true;
-    this.name = name;
+    this._name = name;
     this.save();
   }
 
@@ -62,7 +75,7 @@ class User {
     return {
       id: this._id,
       state: this._state,
-      name: this.name,
+      name: this._name,
       subscribed: this._subscribed,
       isTeacher: this._isTeacher,
       phone: this._phone

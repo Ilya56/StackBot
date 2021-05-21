@@ -1,5 +1,5 @@
 const Context = require('./context');
-const { match } = require('telegraf-i18n')
+const { match } = require('@edjopato/telegraf-i18n')
 
 /**
  * This is the base class of the bot. This class contains and controls states

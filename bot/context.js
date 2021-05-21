@@ -11,6 +11,9 @@ class Context {
    */
   constructor(ctx) {
     this._ctx = ctx;
+    if (!ctx.session) {
+      ctx.session = {};
+    }
   }
 
   /**
@@ -23,10 +26,13 @@ class Context {
 
   /**
    * Reply with text with markdown options
-   * @param {String} text reply text
+   * @param {String|{message:String, context:Object}} text reply text
    * @returns {Promise}
    */
   sendText(text) {
+    if (typeof text === 'object') {
+      return this._ctx.replyWithMarkdown(this._ctx.i18n.t(text.message, text.context));
+    }
     return this._ctx.replyWithMarkdown(this._ctx.i18n.t(text));
   }
 
@@ -96,6 +102,14 @@ class Context {
   }
 
   /**
+   * Returns message text
+   * @returns {String}
+   */
+  getMessageText() {
+    return this._ctx.update.message.text;
+  }
+
+  /**
    * Returns button object that require user contacts
    * @param {String} text text in require contact button
    * @returns {Object}
@@ -121,7 +135,11 @@ class Context {
   }
 
   isEqual(message, text) {
-    return this._ctx.i18n.t(text) === message;
+    return this._ctx.i18n.t(text) === message || text === message;
+  }
+
+  setLocale(locale) {
+    this._ctx.i18n.locale(locale);
   }
 
 }

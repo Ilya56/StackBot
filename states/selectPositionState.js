@@ -71,7 +71,7 @@ class SelectPositionState extends State {
    * @returns {Promise<string>} go to stack if position selected correct
    */
   async onData(context) {
-    const answer = context.getMessageData().text
+    const answer = context.getMessageText();
     const stack = this._scheduler.activeStack;
     if (context.isEqual(answer, 'Refresh keyboard')) {
       return 'select-position';

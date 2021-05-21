@@ -27,7 +27,7 @@ class TeacherState extends State {
   }
 
   async onData(context) {
-    const message = context.getMessageData().text;
+    const message = context.getMessageText();
     const userId = context.getUserId();
     const stack = this._scheduler.activeStack;
     try {

@@ -34,5 +34,14 @@
   "There is no active lab lesson": "There is no active lab lesson",
   "Stack is empty": "Stack is empty",
   "There is no next user": "There is no next user",
-  "This number is already taken": "This number is already taken"
+  "This number is already taken": "This number is already taken",
+  "Please select one of available languages": "Please select one of available languages",
+  "Language changed on Russian": "Language changed on Russian",
+  "Language changed on English": "Language changed on English",
+  "You can change the display name or language of the bot": "You can change the display name or language of the bot",
+  "Please type new display name": "Please type new display name",
+  "Settings": "Settings",
+  "Change display name": "Change display name",
+  "Change language": "Change language",
+  "New name saved": "New name '${newName}' saved"
 }

@@ -42,7 +42,7 @@ class Auth {
     const exists = await this._userBdHelper.checkUserExistsByPhone(phone);
     const result = !exists && (this._config.allowedPhones || []).includes(phone);
     if (result) {
-      this._phoneByUserId[userId] = phone;
+      this._users[userId].phone = phone;
     }
     return result;
   }
@@ -58,8 +58,7 @@ class Auth {
     this._users[userId] = this._users[userId] || new User(this._userBdHelper, {
       id: ctx.from.id,
       state: this._bot.firstStateId,
-      name: ctx.from.first_name + ctx.from.last_name,
-      phone: this._phoneByUserId[userId]
+      name: ctx.from.first_name + (ctx.from.last_name ? ` ${ctx.from.last_name}` : '')
     }).save();
 
     ctx.user = this._users[userId];

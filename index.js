@@ -1,5 +1,5 @@
 const { Telegraf, session } = require('telegraf');
-const TelegrafI18n = require('telegraf-i18n')
+const TelegrafI18n = require('@edjopato/telegraf-i18n').I18n;
 const path = require('path');
 
 const Bot = require('./bot/core');
@@ -13,6 +13,8 @@ const StackState = require('./states/stackState');
 const SelectPositionWithExtraButtonsState = require('./states/selectPositionWithExtraButtonsState');
 const MenuState = require('./states/menuState');
 const TeacherState = require('./states/teacherState');
+const ChangeNameState = require("./states/settings/changeNameState");
+const SettingsState = require("./states/settingsState");
 
 const Database = require('./db/core');
 const UserDbHelper = require('./db/userDbHelper');
@@ -23,6 +25,7 @@ const KpiSchedule = require("./integration/kpiSchedule");
 
 const globalConfig = require('./config/global');
 const kpiConfig = require('./config/kpiSchedule');
+const ChangeLanguageState = require("./states/settings/changeLanguageState");
 
 const tgBot = new Telegraf(globalConfig.token);
 const i18n = new TelegrafI18n({
@@ -58,11 +61,14 @@ const i18n = new TelegrafI18n({
     const selectPositionState = new SelectPositionWithExtraButtonsState(scheduler);
     const stackState = new StackState(scheduler);
     const teacherState = new TeacherState(scheduler);
+    const settingsState = new SettingsState();
+    const changeNameState = new ChangeNameState();
+    const changeLanguageState = new ChangeLanguageState();
 
     // use middlewares
-    tgBot.use(auth.addUserContext);
     tgBot.use(session());
     tgBot.use(i18n.middleware());
+    tgBot.use(auth.addUserContext);
 
     // add states to bot context
     bot.addState(authState);
@@ -70,6 +76,9 @@ const i18n = new TelegrafI18n({
     bot.addState(selectPositionState);
     bot.addState(stackState);
     bot.addState(teacherState);
+    bot.addState(settingsState);
+    bot.addState(changeNameState);
+    bot.addState(changeLanguageState);
     bot.initStates();
 
     // start

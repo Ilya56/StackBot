@@ -34,5 +34,14 @@
   "Stack is empty": "Очередь пустая",
   "Back": "Назад",
   "There is no next user": "Следующего студента нет",
-  "This number is already taken": "Это место уже занято"
+  "This number is already taken": "Это место уже занято",
+  "Please select one of available languages": "Пожалуйста выбери один из доступный языков",
+  "Language changed on Russian": "Язык изменён на русский",
+  "Language changed on English": "Язык изменён на английский",
+  "You can change the display name or language of the bot": "Ты можешь изменить отображаемое имя или язык бота",
+  "Please type new display name": "Пожалуйста введи новое имя",
+  "Settings": "Настройки",
+  "Change display name": "Изменить отображаемое имя",
+  "Change language": "Изменить язык",
+  "New name saved": "Новое имя '${newName}' сохранено"
 }
