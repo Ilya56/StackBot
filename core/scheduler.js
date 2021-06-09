@@ -128,22 +128,25 @@ class Scheduler {
       date.setMinutes(+time[1]);
       const now = new Date();
 
+      const diff = date.getTime() - now.getDate();
       const period = (7 * 24 * 60 * 60 * 1000 * (lab.eachWeek === 'one' ? 1 : 2))
-      let timer = Math.abs(date.getTime() - now.getTime() - this.config.noticeBeforeStart * 60000) % period;
-      if (date.getTime() > now.getTime()) {
-        timer = period - timer;
+      let fromLastLab = Math.abs(now.getTime() - date.getTime() - this.config.noticeBeforeStart * 60000) % period;
+      let toNextLab = period - fromLastLab;
+
+      if (diff < 0) {
+        [fromLastLab, toNextLab] = [toNextLab, fromLastLab];
       }
+
+      let timer = toNextLab;
 
       if (timer >= 2147483647) {
         console.warn(`Cannot start timer for lab ${lab.name} on ${lab.date} ${lab.time}. It is too far`);
         return;
       }
 
-      if (timer > 0) {
-        setTimeout(this._createStack.bind(this), timer, lab);
-      }
+      setTimeout(this._createStack.bind(this), timer, lab);
 
-      const inLesson = period - timer < (this.config.timeOfLesson + this.config.noticeBeforeStart) * 60000;
+      const inLesson = fromLastLab < (this.config.timeOfLesson + this.config.noticeBeforeStart) * 60000;
       if (inLesson) {
         this._createStack(lab);
       }

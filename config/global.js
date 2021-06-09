@@ -1,9 +1,9 @@
 // global configs
 module.exports = {
   noticeBeforeStart: 1,
-  timeOfLesson: 60,
+  timeOfLesson: 120,
   token: '866752777:AAFcxuUZVjDfN_2qVkpo1euPmnyk_GEVqtU',
-  allowedPhones: ['1234567890', '380679960862', '380951234567'],
+  allowedPhones: ['1234567890', '380679960862', '380951234567', '380983648921'],
   teachers: [{
     phone: '0987654321',
     name: 'teacher'
