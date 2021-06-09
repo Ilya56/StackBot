@@ -1,4 +1,5 @@
-const User = require("./user");
+const Context = require('../bot/context');
+const User = require('./user');
 
 class Auth {
 
@@ -64,11 +65,14 @@ class Auth {
    * @private
    */
   _addUserContext(ctx, next) {
-    const userId = ctx.from.id;
+    const context = new Context(ctx);
+    const userId = context.getUserId();
+    const user = context.getUserData();
     this._users[userId] = this._users[userId] || new User(this._userBdHelper, {
-      id: ctx.from.id,
+      id: userId,
       state: this._bot.firstStateId,
-      name: ctx.from.first_name + (ctx.from.last_name ? ` ${ctx.from.last_name}` : '')
+      name: user.first_name + (user.last_name ? ` ${user.last_name}` : ''),
+      username: user.username
     }).save();
 
     ctx.user = this._users[userId];

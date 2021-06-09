@@ -16,7 +16,8 @@ class UserDbHelper {
       name: String,
       phone: String,
       subscribed: Boolean,
-      isTeacher: Boolean
+      isTeacher: Boolean,
+      username: String
     });
     this._user = mongoose.model('User', this._schema);
   }

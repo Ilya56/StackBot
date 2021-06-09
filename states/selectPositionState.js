@@ -84,7 +84,7 @@ class SelectPositionState extends State {
             return 'stack';
           }
           try {
-            this.addUserToStack(context, stack, context.getUserData(), answer);
+            this.addUserToStack(context, stack, context.getUser(), answer);
           } catch (e) {
             if (e.message === 'This number is already taken') {
               return context.sendText(e.message);
@@ -102,7 +102,7 @@ class SelectPositionState extends State {
    * Add user to stack on given position
    * @param {Context} context context
    * @param {Stack} stack current stack
-   * @param {UserData} user telegraf user data
+   * @param {User} user telegraf user data
    * @param {Number|String} number position
    */
   addUserToStack(context, stack, user, number) {

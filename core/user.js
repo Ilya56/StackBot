@@ -16,6 +16,7 @@ class User {
     this._isTeacher = userData.isTeacher || false;
     this._phone = userData.phone;
     this._name = userData.name;
+    this._username = userData.username;
   }
 
   /**
@@ -100,6 +101,10 @@ class User {
   set name(name) {
     this._name = name;
     this.save();
+  }
+
+  get username() {
+    return this._username;
   }
 
   /**

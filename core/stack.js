@@ -14,7 +14,7 @@ class Stack {
     this.active = true;
     /**
      *
-     * @type {{number:Number, user:UserData}[]}
+     * @type {{number:Number, user:User}[]}
      * @private
      */
     this._stack = [];
@@ -38,7 +38,7 @@ class Stack {
 
   /**
    * Returns this stack object
-   * @returns {{number: Number, user: UserData}[]}
+   * @returns {{number: Number, user: User}[]}
    */
   get stack() {
     return this._stack;
@@ -102,7 +102,7 @@ class Stack {
    * @returns {boolean}
    */
   isRegistered(userId) {
-    return !!this._stack.find(s => s.user && s.user.id === +userId);
+    return !!this._stack.find(s => s.user && String(s.user.id) === userId);
   }
 
   /**
@@ -115,7 +115,7 @@ class Stack {
 
   /**
    * Add user to stack
-   * @param {UserData} user user data
+   * @param {User} user user data
    * @param {Number|String} number number in stack
    */
   addUser(user, number) {
@@ -139,7 +139,7 @@ class Stack {
    * @param {String} userId user id
    */
   removeUser(userId) {
-    const userPos = this._stack.find(s => s.user && s.user.id === +userId);
+    const userPos = this._stack.find(s => s.user && String(s.user.id) === userId);
     delete userPos.user;
   }
 
@@ -153,8 +153,8 @@ class Stack {
     for (let i = 0; i < this._maxCount; i++) {
       const user = this._stack[i].user;
       if (user) {
-        result += `${++j}. ${user.first_name}${user.last_name ? ' ' + user.last_name : ''}` +
-          `${user.username ? ` (@${user.username})` : ` ([${user.first_name}](tg://user?id=${user.id}))`}\n`
+        result += `${++j}. ${user.name}` +
+          `${user.username ? ` (@${user.username})` : ` ([${user.name}](tg://user?id=${user.id}))`}\n`
       }
     }
     result = result || 'Stack is empty';
@@ -189,7 +189,7 @@ class Stack {
   /**
    * Returns the user to the given number. If there are users only on the 1st and 3rd numbers, then for number = 2 this function returns the user on the 3rd number
    * @param {Number} index number
-   * @returns {{number: Number, user: UserData}}
+   * @returns {{number: Number, user: User}}
    * @private
    */
   _getActiveAtIndex(index) {
