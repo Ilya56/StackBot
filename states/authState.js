@@ -40,7 +40,7 @@ class AuthState extends State {
     }
     const teacher = this._config.teachers.find(t => t.phone === phone);
     if (teacher) {
-      context.getUser().makeItTeacher(teacher.name);
+      context.getUser().makeThisUserTeacher(teacher.name);
       return 'teacher';
     }
     if (await this._auth.canConnect(context.getUserId(), phone)) {

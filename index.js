@@ -48,8 +48,8 @@ const i18n = new TelegrafI18n({
     const bot = new Bot(tgBot);
     const auth = new Auth(bot, userDbHelper, globalConfig);
 
-    // const kpiSchedule = new KpiSchedule(kpiConfig, scheduleDbHelper, expirationDbHelper);
-    // await kpiSchedule.execute();
+    const kpiSchedule = new KpiSchedule(kpiConfig, scheduleDbHelper, expirationDbHelper);
+    await kpiSchedule.execute();
 
     const scheduler = new Scheduler(20, globalConfig, scheduleDbHelper);
     const subscribe = new Subscribe(path.join(__dirname, 'subscribers.json'), scheduler, bot, userDbHelper);

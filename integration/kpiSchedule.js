@@ -88,10 +88,10 @@ class KpiSchedule {
 
           result.push({
             date: `${this._makeTwoDigit(dayDate.getDate())}.${this._makeTwoDigit(dayDate.getMonth())}.${dayDate.getFullYear()}`,
-            time: lesson.time_start.slice(0, 6),
+            time: lesson.time_start.slice(0, 5),
             eachWeek: eachWeek ? 'one' : 'two',
             name: lesson.lesson_name,
-            teacherName: lesson.teacher_name,
+            teacher: lesson.teacher_name,
             room: lesson.lesson_room
           });
         }

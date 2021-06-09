@@ -20,6 +20,10 @@ class Auth {
       .catch(err => console.error('Error while loading users from db', err));
   }
 
+  /**
+   * Load user from db after bot started
+   * @returns {Promise<void>}
+   */
   async loadUsers() {
     const users = await this._userBdHelper.loadUsers();
     for (let user of users) {
@@ -31,13 +35,19 @@ class Auth {
   }
 
   /**
-   *
+   * Returns middleware that add user object from db in user field to context
    * @returns {function(ctx: Context, next: Function)}
    */
   get addUserContext() {
     return this._addUserContext.bind(this);
   }
 
+  /**
+   * Return true if user has access to this bot
+   * @param {String} userId user id
+   * @param {String} phone user phone
+   * @returns {Promise<boolean>}
+   */
   async canConnect(userId, phone) {
     const exists = await this._userBdHelper.checkUserExistsByPhone(phone);
     const result = !exists && (this._config.allowedPhones || []).includes(phone);
@@ -48,9 +58,9 @@ class Auth {
   }
 
   /**
-   *
-   * @param {Context} ctx
-   * @param {Function} next
+   * Middleware that add user object from db
+   * @param {Context} ctx telegraf context
+   * @param {Function} next next function
    * @private
    */
   _addUserContext(ctx, next) {

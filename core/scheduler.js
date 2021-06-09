@@ -66,8 +66,8 @@ class Scheduler {
   }
 
   /**
-   *
-   * @param {String} id
+   * Add new on stack start listener
+   * @param {String} id listener id
    * @param {function(stack:Stack):void}listener
    */
   addOnStackStartListener(id, listener) {
@@ -86,8 +86,12 @@ class Scheduler {
     delete this._onStackFinishListeners[id];
   }
 
-  set subscribe(subscriber) {
-    this._subscribe = subscriber;
+  /**
+   * Sets subscribe service dependency. For Subscribe class only
+   * @param {Subscribe} subscribe subscribe class
+   */
+  set subscribe(subscribe) {
+    this._subscribe = subscribe;
   }
 
   /**
@@ -124,14 +128,22 @@ class Scheduler {
       date.setMinutes(+time[1]);
       const now = new Date();
 
-      const timer = date.getTime() - now.getTime() - this.config.noticeBeforeStart * 60000;
+      const period = (7 * 24 * 60 * 60 * 1000 * (lab.eachWeek === 'one' ? 1 : 2))
+      let timer = Math.abs(date.getTime() - now.getTime() - this.config.noticeBeforeStart * 60000) % period;
+      if (date.getTime() > now.getTime()) {
+        timer = period - timer;
+      }
+
+      if (timer >= 2147483647) {
+        console.warn(`Cannot start timer for lab ${lab.name} on ${lab.date} ${lab.time}. It is too far`);
+        return;
+      }
 
       if (timer > 0) {
         setTimeout(this._createStack.bind(this), timer, lab);
       }
 
-      const inLesson = timer < 0 &&
-        date.getTime() - now.getTime() + (this.config.timeOfLesson + this.config.noticeBeforeStart) * 60000 > 0;
+      const inLesson = period - timer < (this.config.timeOfLesson + this.config.noticeBeforeStart) * 60000;
       if (inLesson) {
         this._createStack(lab);
       }

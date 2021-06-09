@@ -124,6 +124,12 @@ class Bot {
     });
   }
 
+  /**
+   * Send direct message for user with specified id
+   * @param {String} userId user id
+   * @param {String} message message to send
+   * @returns {Promise<ReturnType<Telegram[string]>>}
+   */
   sendDirectMessage(userId, message) {
     return this._bot.telegram.sendMessage(userId, message);
   }

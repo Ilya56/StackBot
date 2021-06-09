@@ -3,7 +3,7 @@ module.exports = {
   noticeBeforeStart: 1,
   timeOfLesson: 60,
   token: '866752777:AAFcxuUZVjDfN_2qVkpo1euPmnyk_GEVqtU',
-  allowedPhones: ['1234567890', '380679960862'],
+  allowedPhones: ['1234567890', '380679960862', '380951234567'],
   teachers: [{
     phone: '0987654321',
     name: 'teacher'
@@ -23,6 +23,6 @@ module.exports = {
  * @property {Number} timeOfLesson
  * @property {String} token
  * @property {String[]} allowedPhones
- * @property {Array<TeacherConfig>} teachers
+ * @property {TeacherConfig[]} teachers
  * @property {String} adminId
  */

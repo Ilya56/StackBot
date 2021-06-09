@@ -52,12 +52,21 @@ class Subscribe {
     return !!this._subsribers.find(s => s === userId);
   }
 
+  /**
+   * Sends message that new stack is started
+   * @returns {Promise<void>}
+   */
   async onStackStart() {
     for (let subscriber of this._subsribers) {
       await this._bot.sendDirectMessage(subscriber, `Stack for ${this._scheduler.activeLabInfo.name} just created`);
     }
   }
 
+  /**
+   * Calls user to teacher
+   * @param {User} user user to call
+   * @returns {Promise<void>}
+   */
   async callUser(user) {
     if (this._subsribers.includes(String(user.id))) {
       await this._bot.sendDirectMessage(user.id, `It's your turn, go to the teacher`);

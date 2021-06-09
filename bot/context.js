@@ -118,26 +118,52 @@ class Context {
     return Markup.button.contactRequest(this._ctx.i18n.t(text));
   }
 
+  /**
+   * Returns current user state id
+   * @returns {String}
+   */
   getUserState() {
     return this._ctx.user.state;
   }
 
+  /**
+   * Sets new user state id
+   * @param {String} state new state id
+   */
   setUserState(state) {
     this._ctx.user.state = state;
   }
 
+  /**
+   * Returns user name from db
+   * @returns {String}
+   */
   getUserName() {
     return this._ctx.user.name;
   }
 
+  /**
+   * Returns user instance from db
+   * @returns {User}
+   */
   getUser() {
     return this._ctx.user;
   }
 
+  /**
+   * Check that message is equal to text for any language. Recommended to use instead ==
+   * @param {String} message user message on any language
+   * @param {String} text text on english
+   * @returns {boolean}
+   */
   isEqual(message, text) {
     return this._ctx.i18n.t(text) === message || text === message;
   }
 
+  /**
+   * Sets new locale for current user
+   * @param locale
+   */
   setLocale(locale) {
     this._ctx.i18n.locale(locale);
   }

@@ -44,23 +44,41 @@ class Stack {
     return this._stack;
   }
 
+  /**
+   * Returns current number
+   * @returns {number}
+   */
   get currentIndex() {
     return this._currentIndex;
   }
 
+  /**
+   * Increase number
+   */
   next() {
     this._currentIndex++;
   }
 
+  /**
+   * Decrease number
+   */
   previous() {
     this._currentIndex--;
   }
 
+  /**
+   * Sets number = 0 and calls first student
+   * @returns {Promise<void>}
+   */
   callFirst() {
     this._currentIndex = 0;
     return this.call();
   }
 
+  /**
+   * Calls student with current number
+   * @returns {Promise<void>}
+   */
   async call() {
     const pos = this._getActiveAtIndex(this._currentIndex);
     if (!pos) {
@@ -69,6 +87,10 @@ class Stack {
     await this._subscriber.callUser(pos.user);
   }
 
+  /**
+   * Calls next student
+   * @returns {Promise<void>}
+   */
   callNext() {
     this._currentIndex++;
     return this.call();
@@ -164,6 +186,12 @@ class Stack {
     return emptyPositions[Math.floor(Math.random() * emptyPositions.length)].number;
   }
 
+  /**
+   * Returns the user to the given number. If there are users only on the 1st and 3rd numbers, then for number = 2 this function returns the user on the 3rd number
+   * @param {Number} index number
+   * @returns {{number: Number, user: UserData}}
+   * @private
+   */
   _getActiveAtIndex(index) {
     return this._stack.filter(s => s.user)[index];
   }

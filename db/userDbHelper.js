@@ -1,8 +1,14 @@
 const mongoose = require('mongoose');
 const User = require("../core/user");
 
+/**
+ * User db model representation
+ */
 class UserDbHelper {
 
+  /**
+   * Creates new use database helper
+   */
   constructor() {
     this._schema = new mongoose.Schema({
       _id: String,
@@ -16,7 +22,7 @@ class UserDbHelper {
   }
 
   /**
-   *
+   * Returns all users from db
    * @returns {Promise<User[]>}
    */
   async loadUsers() {
@@ -25,8 +31,8 @@ class UserDbHelper {
   }
 
   /**
-   *
-   * @param {User} user
+   * Save new user or update existing in db
+   * @param {User} user new user or updated user
    * @returns {Promise<void>}
    */
   async saveUser(user) {
@@ -38,6 +44,11 @@ class UserDbHelper {
     }
   }
 
+  /**
+   * Return true if user exists
+   * @param {String} phone user phone
+   * @returns {Promise<Boolean>}
+   */
   async checkUserExistsByPhone(phone) {
     return !!await this._user.findOne({phone});
   }
